@@ -1,9 +1,11 @@
 const cds = require("@sap/cds");
 const PuppeteerHTMLPDF = require('./lib');
 const hbs = require('handlebars');
+const { Readable } = require('stream');
+
 
 module.exports = cds.service.impl(async (service) => {
-service.on('generatePDF', async (req,res) => {
+service.on('READ','file', async (req,res) => {
       
     const htmlPDF = new PuppeteerHTMLPDF();
     const options = {
@@ -22,15 +24,12 @@ service.on('generatePDF', async (req,res) => {
     const html = await htmlPDF.readFile(__dirname + '/sample.html','utf8');  
     const template = hbs.compile(html);
     const content = template(pdfData);
-    //req.reply("PDF Generated");
+
   
    // try {
       const pdfBuffer = await htmlPDF.create(content); 
 
-     //...app.get('/download', function(request, response){
-  //...  var fileContents = Buffer.from(fileData, "base64");
-  //   var readStream = new PassThrough();
-  // readStream.end(pdfBuffer);
+
 
   // res.set('Content-disposition', 'attachment; filename=output.pdf');
   // res.set('Content-Type', 'text/plain');
@@ -49,25 +48,24 @@ service.on('generatePDF', async (req,res) => {
     //  const download = Buffer.from(fileData, 'base64');
    //   res.end(pdfBuffer);
     //  req.reply(pdfBuffer);
-
-  //   const Readable = new Readable();
-  //   const result = new Array();
-  //   Readable.push(pdfBuffer);
-  //  // Readable.push(null);
-  //   result.push({value : Readable});
-  //   return result;
   
    // } catch (error) {
     //  console.log('PuppeteerHTMLPDF error', error);
    // }
+//}
 
-   try {
-    let buffer = pdfBuffer;
-    req._.res.set('Content-Type', 'application/pdf');
-    req._.res.send(buffer);
-} catch (error) {
-    req.reject(400, error);
-}
+
+  const readable = new Readable();
+  readable.push(pdfBuffer);
+  return {
+    value: readable,
+    $mediaContentType : 'application/pdf',
+    $mediaContentDispositionFilename : 'output.pdf', 
+    $mediaContentDispositionType : 'inline' 
+  }
+
+   
+
     });
 
 });
