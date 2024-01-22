@@ -57,6 +57,7 @@ service.on('READ','file', async (req,res) => {
 
   const readable = new Readable();
   readable.push(pdfBuffer);
+  readable.push(null);
   return {
     value: readable,
     $mediaContentType : 'application/pdf',
