@@ -30,31 +30,6 @@ service.on('READ','file', async (req,res) => {
       const pdfBuffer = await htmlPDF.create(content); 
 
 
-
-  // res.set('Content-disposition', 'attachment; filename=output.pdf');
-  // res.set('Content-Type', 'text/plain');
-
-  // readStream.pipe(res);
-     //  req.setHeader('Content-Type', 'application/pdf');
-      //  return pdfBuffer;
-      // res.setHeader('Content-Disposition', 'attachment; filename=data.pdf');
-        //  let buffer = Buffer.from(pdfBuffer , 'binary');
-      // req._.res.set('Content-Type', 'application/pdf');
-      //   res.send(pdfBuffer);
-    //  res.writeHead(200, {
-       // 'Content-Disposition': 'attachment; filename="output.pdf"',
-      //  'Content-Type': 'application/pdf',
-    //  });
-    //  const download = Buffer.from(fileData, 'base64');
-   //   res.end(pdfBuffer);
-    //  req.reply(pdfBuffer);
-  
-   // } catch (error) {
-    //  console.log('PuppeteerHTMLPDF error', error);
-   // }
-//}
-
-
   const readable = new Readable();
   readable.push(pdfBuffer);
   readable.push(null);
